@@ -32,7 +32,10 @@ file.addEventListener(
     false
 );
 $("button#upload").click(function(){
+    $("#progress-wrp .progress-bar").css("width", +0 + "%");
+    $("#progress-wrp .status").text(0 + "%");
     $("#progress-wrp").css("visibility", "visible");
+    $("#status").html("");
     var myfile = file.files[0]
     if (myfile === undefined)
         alert("Please choose a file");
