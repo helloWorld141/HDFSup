@@ -49,7 +49,7 @@ def upload():
                 filenames.addFilename(filename, HDFS_PATH+"/"+filename )
                 ### saving to hdfs ###
                 print("Putting file to HDFS")
-                #subprocess.run(["hdfs" ,"dfs", "-put", filepath, HDFS_PATH], stdout=subprocess.PIPE)
+                subprocess.run(["hdfs" ,"dfs", "-put", filepath, HDFS_PATH], stdout=subprocess.PIPE)
                 os.remove(filepath)
                 return "received POST"
     else:
