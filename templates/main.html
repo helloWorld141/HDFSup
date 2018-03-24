@@ -23,12 +23,24 @@
         </div>
     </nav>
     <main role="main" class="container">
-        <form>
-            <div class="form-group">
-                <input id="file" type="file" class="form-control-file"/>
+        <div class="row">
+            <div class="col-md-6">
+                <form>
+                    <div class="form-group">
+                        <input id="file" type="file" class="form-control-file"/>
+                    </div>
+                    <button id="upload" type="button" class="btn btn-primary">Upload</button>
+                </form>
             </div>
-            <button id="upload" type="button" class="btn btn-primary">Upload</button>
-        </form>
+            <div id="filesize" class="col-md-6"></div>
+        </div>
+        <div class="row">
+            <div id="progress-wrp" class="col-md-6" style="visibility:hidden">
+                <div class="progress-bar"></div>
+                <div class="status">0%</div>
+            </div>
+        </div>
+        <div id="status" class="container-fluid"></div>
     </main>
 
 

@@ -5,7 +5,7 @@ from utils import parseConfig, persistFilename
 
 # defining constant
 UPLOAD_FOLDER = "temp"
-ALLOWED_EXTENSIONS = set(["csv", "txt"])
+ALLOWED_EXTENSIONS = set(["csv", "txt", "mat"])
 HDFS_PATH = "/user/ubuntu/data"
 ##### bootstraping app ####
 app = Flask(__name__)
@@ -50,8 +50,9 @@ def upload():
                 ### saving to hdfs ###
                 print("Putting file to HDFS")
                 #subprocess.run(["hdfs" ,"dfs", "-put", filepath, HDFS_PATH], stdout=subprocess.PIPE)
+                file_size = os.stat(filepath).st_size
                 os.remove(filepath)
-                return "received POST"
+                return "File uploaded: " + filename + " (" + str(file_size) + " bytes)"
     else:
         return redirect(url_for("index"), code=302)
 
