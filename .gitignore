@@ -102,3 +102,6 @@ ENV/
 
 # temporary
 *temp/*
+
+#system dependant
+config
