@@ -98,14 +98,25 @@ class Upload{
                         self.progressHandling.bind(this)
                         , false
                     );
+                    myXhr.upload.addEventListener(
+                        'load', 
+                        function(e){
+                            $(".wait").css("visibility", "visible");
+                        }
+                        , false
+                    );
                 }
                 return myXhr;
             },
             success: function(response){
                 // callback with http reponses
                 console.log(response);
-                console.log($("#status"));
-                $("#status").html(response);
+                var response = JSON.parse(response);
+                var filename = response['filename'];
+                var filesize = response['file_size'];
+                var status = "File uploaded: " + filename + " (" + normalizeFileSize(filesize) + ")";
+                $("#status").html(status);
+                $(".wait").css("visibility", "hidden");
 
             },
             error: function(error) {

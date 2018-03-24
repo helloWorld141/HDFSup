@@ -49,10 +49,16 @@ def upload():
                 filenames.addFilename(filename, HDFS_PATH+"/"+filename )
                 ### saving to hdfs ###
                 print("Putting file to HDFS")
-                subprocess.run(["hdfs" ,"dfs", "-put", filepath, HDFS_PATH], stdout=subprocess.PIPE)
+                #subprocess.run(["hdfs" ,"dfs", "-put", filepath, HDFS_PATH], stdout=subprocess.PIPE)
+                import time
+                time.sleep(3)
                 file_size = os.stat(filepath).st_size
                 os.remove(filepath)
-                return "File uploaded: " + filename + " (" + str(file_size) + " bytes)"
+                return json.dumps({
+                    "status": "success",
+                    "filename": filename,
+                    "file_size": file_size
+                })
     else:
         return redirect(url_for("index"), code=302)
 
