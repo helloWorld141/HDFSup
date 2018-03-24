@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
-import json, os
+import json, os, subprocess
 from utils import parseConfig
 
 # defining constant
@@ -45,10 +45,10 @@ def upload():
                 print("Saving file to " + filepath)
                 myfile.save(filepath)
                 ### TODO: saving to hdfs ###
+		subprocess.run(["hdfs dfs", "-put", "/user/ubuntu/data"], stdout=suprocess.PIPE)
                 return "received POST"
     else:
         return redirect(url_for("index"), code=302)
-    
 
 if __name__ == '__main__':
     app.run(host=config['host'], port=config['port'], debug=True)
