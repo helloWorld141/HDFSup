@@ -45,7 +45,7 @@ def upload():
                 print("Saving file to " + filepath)
                 myfile.save(filepath)
                 ### TODO: saving to hdfs ###
-		subprocess.run(["hdfs dfs", "-put", "/user/ubuntu/data"], stdout=suprocess.PIPE)
+                subprocess.run(["hdfs" ,"dfs", "-put", filepath, "/user/ubuntu/data"], stdout=subprocess.PIPE)
                 return "received POST"
     else:
         return redirect(url_for("index"), code=302)
