@@ -116,7 +116,7 @@ class Upload{
             processData: false,
             data: formData,
             contentType: false, // "multipart/form-data", // disable content-type header
-            timeout: 36000//00 // for uploading large file - may take up to hours
+            timeout: 3600000 // for uploading large file - may take up to hours
         });
 
     }
