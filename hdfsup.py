@@ -1,15 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import json, os, subprocess
-from utils import parseConfig
+from utils import parseConfig, persistFilename
 
 # defining constant
 UPLOAD_FOLDER = "temp"
 ALLOWED_EXTENSIONS = set(["csv", "txt"])
+HDFS_PATH = "/user/ubuntu/data"
 ##### bootstraping app ####
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 config = parseConfig()
+filenames = persistFilename()
 #### define functions ####
 
 def allowed_file(filename): # filename is a string
@@ -38,14 +40,17 @@ def upload():
                 filename = secure_filename(myfile.filename)
                 save_dir = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])
                 filepath = os.path.join(save_dir, filename)
-                if os.path.exists(filepath):
+                if filenames.fileExist(filename):
                     return "file already uploaded"
                 if not os.path.isdir(save_dir):
                     os.makedirs(save_dir, exist_ok=True)
                 print("Saving file to " + filepath)
                 myfile.save(filepath)
-                ### TODO: saving to hdfs ###
-                subprocess.run(["hdfs" ,"dfs", "-put", filepath, "/user/ubuntu/data"], stdout=subprocess.PIPE)
+                filenames.addFilename(filename, HDFS_PATH+"/"+filename )
+                ### saving to hdfs ###
+                print("Putting file to HDFS")
+                #subprocess.run(["hdfs" ,"dfs", "-put", filepath, HDFS_PATH], stdout=subprocess.PIPE)
+                os.remove(filepath)
                 return "received POST"
     else:
         return redirect(url_for("index"), code=302)
