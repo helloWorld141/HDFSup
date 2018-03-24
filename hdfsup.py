@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import json, os
+from utils import parseConfig
 
 # defining constant
 UPLOAD_FOLDER = "temp"
@@ -8,7 +9,7 @@ ALLOWED_EXTENSIONS = set(["csv", "txt"])
 ##### bootstraping app ####
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
+config = parseConfig()
 #### define functions ####
 
 def allowed_file(filename): # filename is a string
@@ -50,4 +51,4 @@ def upload():
     
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8001, debug=True)
+    app.run(host=config['host'], port=config['port'], debug=True)
