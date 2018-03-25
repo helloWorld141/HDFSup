@@ -34,14 +34,14 @@ def upload():
             myfile = request.files['file']
             if myfile.filename == "":
                 print("No selected file")
-                return "no selected file"
+                return json.dumps({"status" : "no selected file"})
             else:
                 print(myfile.filename)
                 filename = secure_filename(myfile.filename)
                 save_dir = os.path.join(os.getcwd(), app.config['UPLOAD_FOLDER'])
                 filepath = os.path.join(save_dir, filename)
                 if filenames.fileExist(filename):
-                    return "file already uploaded"
+                    return json.dumps({"status" : "file already uploaded"})
                 if not os.path.isdir(save_dir):
                     os.makedirs(save_dir, exist_ok=True)
                 print("Saving file to " + filepath)
@@ -50,6 +50,10 @@ def upload():
                 ### saving to hdfs ###
                 print("Putting file to HDFS")
                 subprocess.run(["hdfs" ,"dfs", "-put", filepath, HDFS_PATH], stdout=subprocess.PIPE)
+                ### uncomment these line for testing on local 
+                #import time
+                #time.sleep(3)
+                #####
                 file_size = os.stat(filepath).st_size
                 os.remove(filepath)
                 return json.dumps({

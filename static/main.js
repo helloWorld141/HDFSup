@@ -28,14 +28,14 @@ file.addEventListener(
     function(event){
         filesize = file.files[0].size;
         $("#filesize").html(normalizeFileSize(filesize));
+        $("#progress-wrp .progress-bar").css("width", +0 + "%");
+        $("#progress-wrp .status").text(0 + "%");
     },
     false
 );
 $("button#upload").click(function(){
-    $("#progress-wrp .progress-bar").css("width", +0 + "%");
-    $("#progress-wrp .status").text(0 + "%");
     $("#progress-wrp").css("visibility", "visible");
-    $("#status").html("");
+    $("#finalstatus").html("");
     var myfile = file.files[0]
     if (myfile === undefined)
         alert("Please choose a file");
@@ -115,10 +115,14 @@ class Upload{
                 // callback with http reponses
                 console.log(response);
                 var response = JSON.parse(response);
-                var filename = response['filename'];
-                var filesize = response['file_size'];
-                var status = "File uploaded: " + filename + " (" + normalizeFileSize(filesize) + ")";
-                $("#status").html(status);
+                if (response["status"] === "success"){
+                    var filename = response['filename'];
+                    var filesize = response['file_size'];
+                    var status = "File uploaded: " + filename + " (" + normalizeFileSize(filesize) + ")";                    
+                } else {
+                    var status = response["status"]
+                }
+                $("#finalstatus").html(status);
                 $(".wait").css("visibility", "hidden");
 
             },
