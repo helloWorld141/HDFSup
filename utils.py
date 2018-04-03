@@ -1,4 +1,5 @@
-import os, json
+import os, json, re, subprocess
+from sparkUIScraper import getSlaveIPs
 def parseConfig():
     filepath = os.path.join(os.path.dirname(os.path.relpath(__file__)), "config")
     if os.path.exists(filepath):
@@ -34,3 +35,37 @@ class persistFilename():
         else:
             print("file not exist")
             return None
+
+class SparkSlusterManager():
+    def __init__ (self):
+        pass
+
+    def isValidIP(self, ip):
+        hosts = open('/etc/hosts').read()
+        return re.search(ip, hosts) != None
+
+    def deactivateSparkWorker(self, ip):
+        if not self.isValidIP(ip):
+            return None
+        activatedSlaves = getSlaveIPs()
+        if ip not in activatedSlaves:
+            return False
+        cmd = 'ssh ubuntu@' + ip + ' "cd $SPARK_HOME/sbin; ./stop-slave.sh"'
+        try:
+            subprocess.run(cmd, stdout=subprocess.STDOUT)
+            return True
+        except Exception:
+            return False
+
+    def activateSparkWorker(self, ip):
+        if not self.isValidIP(ip):
+            return None
+        activatedSlaves = getSlaveIPs()
+        if ip in activatedSlaves:
+            return False
+        cmd = 'ssh ubuntu@' + ip + ' "cd $SPARK_HOME/sbin; ./start-slave.sh spark://43.240.97.180:7077"'
+        try:
+            subprocess.run(cmd, stdout=subprocess.STDOUT)
+            return True
+        except Exception:
+            return False
