@@ -36,13 +36,18 @@ class persistFilename():
             print("file not exist")
             return None
 
-class SparkSlusterManager():
+class SparkClusterManager():
     def __init__ (self):
-        pass
+        print("Manager created")
 
     def isValidIP(self, ip):
         hosts = open('/etc/hosts').read()
-        return re.search(ip, hosts) != None
+        if re.search(ip, hosts) == None:
+            print(ip + " is not valid")
+            return False
+        else:
+            print(ip + " is valid")
+            return True
 
     def deactivateSparkWorker(self, ip):
         if not self.isValidIP(ip):
@@ -50,11 +55,13 @@ class SparkSlusterManager():
         activatedSlaves = getSlaveIPs()
         if ip not in activatedSlaves:
             return False
-        cmd = 'ssh ubuntu@' + ip + ' "cd $SPARK_HOME/sbin; ./stop-slave.sh"'
+        cmd = ['bash', './bin/deactivate.sh', ip] 
         try:
-            subprocess.run(cmd, stdout=subprocess.STDOUT)
+            subprocess.run(cmd)
+            print("Slave " + ip + " deactivated")
             return True
-        except Exception:
+        except Exception as e:
+            print(e)
             return False
 
     def activateSparkWorker(self, ip):
@@ -63,9 +70,15 @@ class SparkSlusterManager():
         activatedSlaves = getSlaveIPs()
         if ip in activatedSlaves:
             return False
-        cmd = 'ssh ubuntu@' + ip + ' "cd $SPARK_HOME/sbin; ./start-slave.sh spark://43.240.97.180:7077"'
+        cmd = ['bash', './bin/activate.sh', ip]
         try:
-            subprocess.run(cmd, stdout=subprocess.STDOUT)
+            subprocess.run(cmd)
+            print("Slave " + ip + " activated") 
             return True
-        except Exception:
+        except Exception as e:
+            print(e)
             return False
+
+if __name__ == "__main__":
+    manager = SparkClusterManager()
+    print(manager.activateSparkWorker("43.240.96.234"))

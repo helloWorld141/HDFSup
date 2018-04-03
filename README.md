@@ -1,2 +1,2 @@
 # HDFSup
-a simple web UI for uploading file to a deployed Hadoop Dstributed File System
+a simple web UI for uploading file to a deployed Hadoop Dstributed File System and managing Spark cluster
